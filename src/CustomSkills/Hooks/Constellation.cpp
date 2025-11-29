@@ -71,7 +71,7 @@ namespace CustomSkills
 				Xbyak::Label funcLbl;
 				Xbyak::Label retnLbl;
 
-				mov(ecx, dword[rdi + offsetof(RE::StatsMenu, selectedTree)]);
+				mov(ecx, dword[rdi + offsetof(RE::StatsMenu::RUNTIME_DATA, selectedTree)]);
 				call(ptr[rip + funcLbl]);
 				jmp(ptr[rip + retnLbl]);
 
@@ -109,7 +109,7 @@ namespace CustomSkills
 				Xbyak::Label funcLbl;
 				Xbyak::Label retn;
 
-				mov(ecx, dword[rbx + offsetof(RE::StatsMenu, selectedTree)]);
+				mov(ecx, dword[rbx + offsetof(RE::StatsMenu::RUNTIME_DATA, selectedTree)]);
 				call(ptr[rip + funcLbl]);
 				jmp(retn);
 
@@ -148,7 +148,7 @@ namespace CustomSkills
 				Xbyak::Label funcLbl;
 				Xbyak::Label retn;
 
-				mov(ecx, dword[rdi + offsetof(RE::StatsMenu, selectedTree)]);
+				mov(ecx, dword[rdi + offsetof(RE::StatsMenu::RUNTIME_DATA, selectedTree)]);
 				call(ptr[rip + funcLbl]);
 				jmp(retn);
 
@@ -188,7 +188,7 @@ namespace CustomSkills
 				Xbyak::Label funcLbl;
 				Xbyak::Label retn;
 
-				mov(ecx, dword[rdi + offsetof(RE::StatsMenu, selectedTree)]);
+				mov(ecx, dword[rdi + offsetof(RE::StatsMenu::RUNTIME_DATA, selectedTree)]);
 				call(ptr[rip + funcLbl]);
 				jmp(retn);
 
@@ -213,12 +213,12 @@ namespace CustomSkills
 
 		auto SetSelectedTree = +[](RE::StatsMenu* a_statsMenu, std::uint32_t a_newIndex)
 		{
-			const std::uint32_t oldIndex = a_statsMenu->selectedTree;
+			const std::uint32_t oldIndex = a_statsMenu->GetRuntimeData().selectedTree;
 			auto& controllers = CustomSkillsManager::_cImageControllers;
 
 			controllers[oldIndex].Exit();
 
-			a_statsMenu->selectedTree = a_newIndex;
+			a_statsMenu->GetRuntimeData().selectedTree = a_newIndex;
 			controllers[a_newIndex].Enter();
 		};
 

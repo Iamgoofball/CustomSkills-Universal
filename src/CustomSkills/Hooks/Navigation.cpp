@@ -23,7 +23,7 @@ namespace CustomSkills
 
 		auto ComputeSelectedTree = +[](const RE::StatsMenu* a_menu, float a_angle) -> std::uint32_t
 		{
-			const float skillAngle = 360.0f / a_menu->numSelectableTrees;
+			const float skillAngle = 360.0f / a_menu->GetRuntimeData().numSelectableTrees;
 
 			a_angle += skillAngle * 0.5f;
 
@@ -89,7 +89,7 @@ namespace CustomSkills
 				Xbyak::Label funcLbl;
 				Xbyak::Label retnLbl;
 
-				mov(ecx, dword[rdi + offsetof(RE::StatsMenu, numSelectableTrees)]);
+				mov(ecx, dword[rdi + offsetof(RE::StatsMenu::RUNTIME_DATA, numSelectableTrees)]);
 				movaps(xmm1, xmm2);
 				call(ptr[rip + funcLbl]);
 				mulss(xmm6, xmm0);

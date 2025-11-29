@@ -135,7 +135,7 @@ namespace CustomSkills
 		}
 
 		if (const auto player = RE::PlayerCharacter::GetSingleton()) {
-			return static_cast<std::uint32_t>(player->perkCount);
+			return static_cast<std::uint32_t>(player->GetPlayerRuntimeData().perkCount);
 		}
 
 		return 0;
@@ -151,7 +151,7 @@ namespace CustomSkills
 		}
 
 		if (const auto player = RE::PlayerCharacter::GetSingleton()) {
-			player->perkCount = a_value;
+			player->GetPlayerRuntimeData().perkCount = a_value;
 		}
 	}
 
@@ -196,7 +196,7 @@ namespace CustomSkills
 		}
 
 		const auto playerCharacter = RE::PlayerCharacter::GetSingleton();
-		return playerCharacter->GetActorValue(a_skill);
+		return playerCharacter->AsActorValueOwner()->GetActorValue(a_skill);
 	}
 
 	float CustomSkillsManager::GetSkillProgressPercent(RE::ActorValue a_skill)
@@ -207,7 +207,7 @@ namespace CustomSkills
 
 		// WerewolfPerks / VampirePerks store skill progress
 		const auto playerCharacter = RE::PlayerCharacter::GetSingleton();
-		return playerCharacter->GetActorValue(a_skill);
+		return playerCharacter->AsActorValueOwner()->GetActorValue(a_skill);
 	}
 
 	float CustomSkillsManager::GetBaseSkillLevel(RE::ActorValue a_skill)
@@ -217,7 +217,7 @@ namespace CustomSkills
 		}
 
 		const auto playerCharacter = RE::PlayerCharacter::GetSingleton();
-		return playerCharacter->GetBaseActorValue(a_skill);
+		return playerCharacter->AsActorValueOwner()->GetBaseActorValue(a_skill);
 	}
 
 	std::shared_ptr<SkillGroup> CustomSkillsManager::FindSkillMenu(std::string_view a_key)

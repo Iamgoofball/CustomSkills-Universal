@@ -36,15 +36,17 @@ namespace CustomSkills
 				const std::uint32_t numSkills = static_cast<std::uint32_t>(
 					CustomSkillsManager::_menuSkills->Skills.size());
 
-				menu->selectedTree = CustomSkillsManager::_menuSkills->LastSelectedTree;
-				menu->numSelectableTrees = (std::max)(2U, numSkills);
+				menu->GetRuntimeData()
+					.selectedTree = CustomSkillsManager::_menuSkills->LastSelectedTree;
+				menu->GetRuntimeData().numSelectableTrees = (std::max)(2U, numSkills);
 
-				menu->skillTrees.clear();
+				menu->GetRuntimeData().skillTrees.clear();
 				for (std::uint32_t i = 0; i < numSkills; ++i) {
-					menu->skillTrees.push_back(CustomSkillsManager::_menuSkills->ActorValues[i]);
+					menu->GetRuntimeData().skillTrees.push_back(
+						CustomSkillsManager::_menuSkills->ActorValues[i]);
 				}
 				for (std::uint32_t i = numSkills; i < 18; ++i) {
-					menu->skillTrees.push_back(
+					menu->GetRuntimeData().skillTrees.push_back(
 						static_cast<RE::ActorValue>(CUSTOM_SKILL_BASE_VALUE + i));
 				}
 			}
@@ -219,14 +221,15 @@ namespace CustomSkills
 				return;
 			}
 			else if (CustomSkillsManager::IsOurMenuMode()) {
-				CustomSkillsManager::_menuSkills->LastSelectedTree = a_statsMenu->selectedTree;
+				CustomSkillsManager::_menuSkills
+					->LastSelectedTree = a_statsMenu->GetRuntimeData().selectedTree;
 				if (CustomSkillsManager::FindSkillMenu("SKILLS"sv) ==
 					CustomSkillsManager::_menuSkills) {
-					*lastSelectedTree = a_statsMenu->selectedTree;
+					*lastSelectedTree = a_statsMenu->GetRuntimeData().selectedTree;
 				}
 			}
 			else {
-				*lastSelectedTree = a_statsMenu->selectedTree;
+				*lastSelectedTree = a_statsMenu->GetRuntimeData().selectedTree;
 			}
 		};
 

@@ -76,7 +76,7 @@ namespace Papyrus::CustomSkills
 		}
 		else if (const auto actorValue = util::ParseSkill(asSkillId)) {
 			if (const auto player = RE::PlayerCharacter::GetSingleton()) {
-				return static_cast<std::int32_t>(player->GetBaseActorValue(*actorValue));
+				return static_cast<std::int32_t>(player->AsActorValueOwner()->GetBaseActorValue(*actorValue));
 			}
 		}
 		return 0;

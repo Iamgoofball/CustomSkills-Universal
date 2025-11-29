@@ -10,16 +10,28 @@ namespace CustomSkills
 		float a_improveMult,
 		float a_improveOffset)
 	{
+		static const RE::Setting* const
+			fSkillUseCurve = RE::GameSettingCollection::GetSingleton()->GetSetting(
+				"fSkillUseCurve");
+
+		const float useCurve = fSkillUseCurve ? fSkillUseCurve->GetFloat() : 1.95f;
+
 		return std::fma(
-			std::powf(static_cast<float>(a_currentRank), "fSkillUseCurve"_gs.value_or(1.95f)),
+			std::powf(static_cast<float>(a_currentRank), useCurve),
 			a_improveMult,
 			a_improveOffset);
 	}
 
 	static void IncreasePlayerCharacterXP(std::int32_t a_rankGained)
 	{
+		static const RE::Setting* const
+			fXPPerSkillRank = RE::GameSettingCollection::GetSingleton()->GetSetting(
+				"fXPPerSkillRank");
+
+		const float xpPerSkillRank = fXPPerSkillRank ? fXPPerSkillRank->GetFloat() : 1.0f;
+
 		const auto player = RE::PlayerCharacter::GetSingleton();
-		player->skills->data->xp += a_rankGained * "fXPPerSkillRank"_gs.value_or(1.0f);
+		player->GetPlayerRuntimeData().skills->data->xp += a_rankGained * xpPerSkillRank;
 	}
 
 	void Skill::Advance(
@@ -40,14 +52,14 @@ namespace CustomSkills
 
 		float xp = a_isSkillUse ? std::fma(a_magnitude, useMult, useOffset) : a_magnitude;
 		const auto player = RE::PlayerCharacter::GetSingleton();
-		player->advanceSkill = RE::ActorValue::kNone;
-		player->advanceObject = a_advanceObject;
-		player->advanceAction = 0;
+		player->GetPlayerRuntimeData().advanceSkill = RE::ActorValue::kNone;
+		player->GetPlayerRuntimeData().advanceObject = a_advanceObject;
+		player->GetPlayerRuntimeData().advanceAction = 0;
 		RE::BGSEntryPoint::HandleEntryPoint(
 			RE::BGSEntryPoint::ENTRY_POINT::kModSkillUse,
 			player,
 			&xp);
-		player->advanceObject = nullptr;
+		player->GetPlayerRuntimeData().advanceObject = nullptr;
 
 		std::int32_t level = static_cast<std::int32_t>(Level->value);
 		float ratio = Ratio->value;

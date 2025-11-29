@@ -8,7 +8,10 @@
     "spdlog",
     "xbyak",
     "simpleini",
-    "jsoncpp"
+    "jsoncpp",
+    "directxtk",
+    "catch2",
+	  "rapidcsv"
   ],
   "builtin-baseline": "000d1bda1ffa95a73e0b40334fa4103d6f4d3d48",
   "overrides": [

@@ -19,8 +19,10 @@ namespace CustomSkills
 		const auto numSkills = CustomSkillsManager::GetCurrentSkillCount();
 		auto skillStats = std::vector<RE::GFxValue>(5 * numSkills);
 
-		static auto iDifficultyLevelMax = "iDifficultyLevelMax"_gs;
-		const bool legendaryAvailable = iDifficultyLevelMax && *iDifficultyLevelMax >= 5;
+
+		static auto iDifficultyLevelMax = RE::GameSettingCollection::GetSingleton()->GetSetting(
+			"iDifficultyLevelMax");
+		const bool legendaryAvailable = iDifficultyLevelMax && iDifficultyLevelMax->GetSInt() >= 5;
 
 		for (std::uint32_t i = 0; i < skillStats.size(); i += 5) {
 			RE::GFxValue& level = skillStats[i + 0];
@@ -29,7 +31,7 @@ namespace CustomSkills
 			RE::GFxValue& color = skillStats[i + 3];
 			RE::GFxValue& legendary = skillStats[i + 4];
 
-			const RE::ActorValue actorValue = a_menu->skillTrees[i / 5];
+			const RE::ActorValue actorValue = a_menu->GetRuntimeData().skillTrees[i / 5];
 			if (const auto skill = CustomSkillsManager::GetCurrentSkill(actorValue)) {
 				if (skill->Level) {
 					level.SetNumber(static_cast<std::uint32_t>(skill->Level->value));
@@ -58,11 +60,12 @@ namespace CustomSkills
 				color.SetString(Game::GetActorValueColor(actorValue));
 
 				const auto player = RE::PlayerCharacter::GetSingleton();
-				const auto playerSkills = player ? player->skills : nullptr;
+				const auto playerSkills = player ? player->GetPlayerRuntimeData().skills : nullptr;
 				const std::size_t idx = util::to_underlying(actorValue) - 6;
 				if (playerSkills && idx < 18) {
 					const auto& data = playerSkills->data->skills[idx];
-					level.SetNumber(static_cast<std::int32_t>(player->GetActorValue(actorValue)));
+					level.SetNumber(static_cast<std::int32_t>(
+						player->AsActorValueOwner()->GetActorValue(actorValue)));
 					percent.SetNumber((data.xp / data.levelThreshold) * 100);
 
 					legendary.SetNumber(
@@ -72,7 +75,7 @@ namespace CustomSkills
 					actorValue == RE::ActorValue::kWerewolfPerks ||
 					actorValue == RE::ActorValue::kVampirePerks) {
 					level.SetString(""sv);
-					percent.SetNumber(player->GetActorValue(actorValue));
+					percent.SetNumber(player->AsActorValueOwner()->GetActorValue(actorValue));
 				}
 			}
 		}

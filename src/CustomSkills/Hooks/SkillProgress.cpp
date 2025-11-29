@@ -158,10 +158,11 @@ void SkillProgress::HideLevelPatch()
 		if (CustomSkillsManager::IsOurMenuMode()) {
 			if (a_countDelta > 0) {
 				if (const auto player = RE::PlayerCharacter::GetSingleton()) {
-					std::int32_t oldCount = player->perkCount;
+					std::int32_t oldCount = player->GetPlayerRuntimeData().perkCount;
 					std::int32_t newCount = oldCount + a_countDelta;
 					if (newCount > oldCount && oldCount != 255) {
-						player->perkCount = static_cast<std::uint8_t>((std::min)(255, newCount));
+						player->GetPlayerRuntimeData().perkCount = static_cast<std::uint8_t>(
+							(std::min)(255, newCount));
 					}
 				}
 			}
@@ -239,10 +240,11 @@ void SkillProgress::HideLevelPatch()
 				continue;
 			}
 
-			static auto sRequirementsText = "sRequirementsText"_gs;
+			static auto sRequirementsText = RE::GameSettingCollection::GetSingleton()->GetSetting(
+				"sRequirementsText");
 			if (firstReq) {
 				if (sRequirementsText)
-					ss << *sRequirementsText;
+					ss << sRequirementsText->GetString();
 				else
 					ss << "Requires";
 			}
